@@ -1,0 +1,21 @@
+{
+  "name": "globetrotter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit",
+    "bkd": "cd backend && npm run dev",
+    "ftd": "cd frontend && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SugamKuber/Globetrotter.git"
+  },
+  "author": "sugam kuber",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SugamKuber/Globetrotter/issues"
+  },
+  "homepage": "https://github.com/SugamKuber/Globetrotter#readme"
+}
