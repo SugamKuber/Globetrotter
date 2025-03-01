@@ -1,27 +1,36 @@
 import { Elysia } from "elysia";
 import { User } from "../../models/User";
-import { hashPassword, comparePassword } from "../../utils/helpers";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants/constants";
 import type { CustomJWTPayload } from "../../types/auth.types";
 
-export const signup = async ({ body, set }: any) => {
+export const signup = async ({ body, set, jwt }: any) => {
     try {
-        console.log("hehhe")
-        const { name, username, password } = body;
+        const { fullname, username, password } = body;
+
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             set.status = 400;
             return { success: false, message: ERROR_MESSAGES.USER_EXISTS };
         }
 
-        await User.create({ name, username, password });
+        const hashedPassword = await Bun.password.hash(password);
+
+        const refreshToken = await jwt.sign({
+            userId: username,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7)
+            // 7 days expiry
+        });
+
+        await User.create({ fullname, username, password: hashedPassword, refreshToken });
+
         return { success: true, message: SUCCESS_MESSAGES.SIGNUP_SUCCESS };
     } catch (error) {
-        console.log(error)
+        console.error(error);
         set.status = 500;
         return { success: false, message: ERROR_MESSAGES.INTERNAL_ERROR };
     }
 };
+
 
 export const login = async ({ body, set, jwt }: {
     body: { username: string; password: string };
@@ -30,26 +39,71 @@ export const login = async ({ body, set, jwt }: {
 }) => {
     try {
         const { username, password } = body;
-        const user = await User.findOne({ username }).select("+password +salt") as { _id: string, password: string, salt: string };
 
+        const user = await User.findOne({ username }).select("+password +refreshToken");
         if (!user) {
             set.status = 401;
             return { success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS };
         }
 
-        const isValid = comparePassword(password, user.salt, user.password);
+        const isValid = await Bun.password.verify(password, user.password);
         if (!isValid) {
             set.status = 401;
             return { success: false, message: ERROR_MESSAGES.INVALID_CREDENTIALS };
         }
 
-        const token = await jwt.sign({
-            userId: user._id,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour expiration
+        const accessToken = await jwt.sign({
+            userId: user._id.toString(),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour expiry
         });
 
-        return { success: true, token, message: SUCCESS_MESSAGES.LOGIN_SUCCESS };
+        const refreshToken = await jwt.sign({
+            userId: user._id.toString(),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7) // 7 days expiry
+        });
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        return { success: true, accessToken, refreshToken, message: SUCCESS_MESSAGES.LOGIN_SUCCESS };
     } catch (error) {
+        console.error(error);
+        set.status = 500;
+        return { success: false, message: ERROR_MESSAGES.INTERNAL_ERROR };
+    }
+};
+
+export const refreshToken = async ({ body, set, jwt }: {
+    body: { refreshToken: string };
+    set: any;
+    jwt: {
+        verify: (token: string) => Promise<CustomJWTPayload>
+        sign: (payload: CustomJWTPayload) => Promise<string>;
+    };
+}) => {
+    try {
+        const { refreshToken } = body;
+
+        const payload = await jwt.verify(refreshToken);
+        if (!payload || !payload.userId) {
+            set.status = 401;
+            return { success: false, message: ERROR_MESSAGES.UNAUTHORIZED };
+        }
+
+        const user = await User.findOne({ _id: payload.userId }).select("+refreshToken");
+        if (!user || user.refreshToken !== refreshToken) {
+            set.status = 401;
+            return { success: false, message: ERROR_MESSAGES.UNAUTHORIZED };
+        }
+
+        const newAccessToken = await jwt.sign({
+            userId: user._id.toString(),
+            exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour expiry
+        });
+
+        return { success: true, accessToken: newAccessToken };
+    } catch (error) {
+        console.error(error);
         set.status = 500;
         return { success: false, message: ERROR_MESSAGES.INTERNAL_ERROR };
     }

@@ -1,18 +1,16 @@
 export interface IUser {
     _id: string;
-    name: string;
+    fullname: string;
     username: string;
     password: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface IUserDocument extends IUser, Document {
-    comparePassword(candidatePassword: string): Promise<boolean>;
-}
+export interface IUserDocument extends IUser, Document { }
 
 export interface IUserCreate {
-    name: string;
+    fullname: string;
     username: string;
     password: string;
 }
@@ -24,7 +22,7 @@ export interface IUserLogin {
 
 export interface IUserResponse {
     id: string;
-    name: string;
+    fullname: string;
     username: string;
     createdAt: Date;
 }

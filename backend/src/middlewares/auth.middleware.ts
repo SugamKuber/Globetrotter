@@ -12,6 +12,7 @@ export const authMiddleware = (app: Elysia) =>
             jwt({
                 name: "jwt",
                 secret: config.JWT_SECRET,
+                sign: true,
             })
         )
         .derive(async ({ jwt, bearer, set }) => {
@@ -26,7 +27,7 @@ export const authMiddleware = (app: Elysia) =>
                 throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
             }
 
-            const user = await User.findById(payload.userId).select("-password -salt");
+            const user = await User.findById(payload.userId).select("-password -refreshToken");
             if (!user) {
                 set.status = 401;
                 throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
