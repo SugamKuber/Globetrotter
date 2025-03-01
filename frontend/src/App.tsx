@@ -4,7 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import InvitePage from './pages/Invite';
 
 function App() {
   return (
@@ -16,7 +15,6 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
-            <Route path="/invite" element={<InvitePage />} />
           </Route>
         </Routes>
       </AuthProvider>

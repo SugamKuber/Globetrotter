@@ -2,14 +2,17 @@ import { Elysia } from "elysia";
 import { User } from "../../models/User";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants/constants";
 import type { CustomJWTPayload } from "../../types/auth.types";
+import { Invite } from "../../models/Invite";
+import { Types } from "mongoose";
+import { config } from "../../config/config";
 
 export const signup = async ({ body, set, jwt }: {
-    body: { fullname: string; username: string; password: string };
+    body: { fullname: string; username: string; password: string, ref?: string };
     set: { status: number };
     jwt: any // TODO: Add type
 }) => {
     try {
-        const { fullname, username, password } = body;
+        const { fullname, username, password, ref } = body;
 
         const existingUser = await User.findOne({ username });
         if (existingUser) {
@@ -25,7 +28,25 @@ export const signup = async ({ body, set, jwt }: {
             // 7 days expiry
         });
 
-        await User.create({ fullname, username, password: hashedPassword, refreshToken });
+        const user = await User.create({ fullname, username, password: hashedPassword, refreshToken });
+
+        const invite = new Invite({
+            inviterId: user._id,
+            inviteLink: `${config.FRONTEND_URL}/signup?ref=${user._id.toString()}`,
+        });
+
+        await invite.save();
+
+        if (ref) {
+            console.log("heheheh")
+            const referrer = await Invite.findOne({ inviterId: new Types.ObjectId(ref) });
+            if (referrer) {
+                console.log(referrer)
+                console.log(user._id)
+                referrer.inviteesId.push(user._id);
+                await referrer.save();
+            }
+        }
 
         return { success: true, message: SUCCESS_MESSAGES.SIGNUP_SUCCESS };
     } catch (error) {

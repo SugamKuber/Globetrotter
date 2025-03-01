@@ -9,6 +9,7 @@ export const authRouter = (app: Elysia) =>
                     fullname: t.String(),
                     username: t.String(),
                     password: t.String(),
+                    ref: t.Optional(t.String()),
                 }),
             })
             .post("/login", login, {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
 
@@ -8,32 +8,50 @@ const Login: React.FC = () => {
         username: '',
         password: ''
     });
+
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
-    const validateForm = () => {
-        const newErrors: { [key: string]: string } = {};
-        if (!formData.username.trim()) newErrors.username = 'Username is required';
-        if (!formData.password) newErrors.password = 'Password is required';
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setTouched({ username: true, password: true });
+        performLogin();
+    };
 
-        if (!validateForm()) return;
+    const [searchParams] = useSearchParams();
+    useEffect(() => {
+        const username = searchParams.get('username');
+        const password = searchParams.get('password');
+
+        if (username && password) {
+            setFormData({ username, password });
+            navigate(window.location.pathname, { replace: true });
+            performLogin(username, password);
+        }
+    }, []);
+
+    const performLogin = async (usernameParam?: string, passwordParam?: string) => {
+        const credentials = {
+            username: usernameParam || formData.username,
+            password: passwordParam || formData.password,
+        };
+
+        const newErrors: { [key: string]: string } = {};
+        if (!credentials.username.trim()) newErrors.username = 'Username is required';
+        if (!credentials.password) newErrors.password = 'Password is required';
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length > 0) return;
 
         setIsSubmitting(true);
+
         try {
             const response = await fetch('http://localhost:5000/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(credentials),
             });
 
             if (response.ok) {

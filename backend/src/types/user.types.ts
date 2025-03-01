@@ -26,3 +26,13 @@ export interface IUserResponse {
     username: string;
     createdAt: Date;
 }
+
+export interface InviteLinkResponse {
+    inviteUrl: string;
+    expiresAt: Date;
+}
+
+export interface InviteCodePayload {
+    code: string;
+    userId: string;
+}

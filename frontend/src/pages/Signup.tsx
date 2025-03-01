@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FiUser, FiLock, FiAlertCircle, FiMail } from 'react-icons/fi';
 
 const Signup: React.FC = () => {
@@ -7,8 +7,10 @@ const Signup: React.FC = () => {
     fullname: '',
     username: '',
     password: '',
-    confirmPassword: ''
   });
+  const [searchParams] = useSearchParams();
+  const refCode = searchParams.get('ref');
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
@@ -20,7 +22,6 @@ const Signup: React.FC = () => {
     if (!formData.username.trim()) newErrors.username = 'Username is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -41,21 +42,28 @@ const Signup: React.FC = () => {
       fullname: true,
       username: true,
       password: true,
-      confirmPassword: true
     });
 
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+
+    const requestBody = {
+      fullname: formData.fullname,
+      username: formData.username,
+      password: formData.password,
+      ...(refCode && { ref: refCode })
+    };
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(requestBody)
       });
 
       if (response.ok) {
-        navigate('/login');
+        navigate(`/login?username=${encodeURIComponent(formData.username)}&password=${encodeURIComponent(formData.password)}`, { replace: true });
       } else {
         const errorData = await response.json();
         setErrors({ form: errorData.message || 'Signup failed' });
@@ -74,6 +82,12 @@ const Signup: React.FC = () => {
           <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
             Create Account
           </h2>
+          {refCode && (
+            <p className="text-gray-300 mt-2 text-sm">
+              You are being invited
+            </p>
+          )}
+
         </div>
 
         {errors.form && (
@@ -151,26 +165,6 @@ const Signup: React.FC = () => {
             {touched.password && errors.password && (
               <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
                 <FiAlertCircle /> {errors.password}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-gray-300 mb-2">Confirm Password</label>
-            <div className="relative">
-              <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-              <input
-                type="password"
-                className={`w-full pl-10 pr-4 py-3 bg-gray-700/30 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-                  } rounded-lg focus:outline-none focus:border-blue-500 transition-colors`}
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                onBlur={() => setTouched({ ...touched, confirmPassword: true })}
-              />
-            </div>
-            {touched.confirmPassword && errors.confirmPassword && (
-              <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
-                <FiAlertCircle /> {errors.confirmPassword}
               </p>
             )}
           </div>

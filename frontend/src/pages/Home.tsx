@@ -10,38 +10,18 @@ import QuizQuestion from '../components/QuizQuestion'
 import QuizResult from '../components/QuizResult'
 import QuizEnd from '../components/QuizEnd'
 import { useAuth } from '../contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { FiAlertCircle, FiCheckCircle, FiCopy, FiLink, FiLoader, FiUser, FiUsers } from 'react-icons/fi'
 
 const Home: React.FC = () => {
 
-    const [userData, setUserData] = useState<{ fullname: string } | null>(null);
+    const [userData, setUserData] = useState<{ fullname: string, username: string, inviteLink: string, highestScore: number } | null>(null);
     const [profileError, setProfileError] = useState('');
     const { accessToken, logout } = useAuth();
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/user/me', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
-
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserData(data);
-                } else {
-                    setProfileError('Failed to fetch profile');
-                }
-            } catch (err) {
-                setProfileError('Error fetching profile');
-            }
-        };
-
-        fetchProfile();
-    }, [accessToken]);
-
+    const [inviteLink, setInviteLink] = useState('');
+    const [invitees, setInvitees] = useState<Invitee[]>([]);
+    const [loading, setLoading] = useState({ link: true, invitees: true });
+    const [inviteError, setInviteError] = useState('');
+    const [copySuccess, setCopySuccess] = useState('');
     const [quizData, setQuizData] = useState<QuizData | null>(null)
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
     const [score, setScore] = useState<number>(0)
@@ -54,6 +34,31 @@ const Home: React.FC = () => {
     const [timeTaken, setTimeTaken] = useState<number>(0)
     const [wrongQuestions, setWrongQuestions] = useState<number>(0)
     const [correctQuestions, setCorrectQuestions] = useState<number>(0)
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/user/me', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUserData(data);
+                    setInviteLink(data.inviteLink)
+                } else {
+                    setProfileError('Failed to fetch profile');
+                }
+            } catch (err) {
+                setProfileError('Error fetching profile');
+            }
+        };
+
+        fetchProfile();
+    }, [accessToken]);
+
+
 
     const handleStartQuiz = async () => {
         try {
@@ -140,34 +145,130 @@ const Home: React.FC = () => {
         setQuizEnded(false)
     }
 
+    interface Invitee {
+        id: string;
+        name: string;
+        highestScore: number;
+    }
+
+    useEffect(() => {
+        const fetchInviteData = async () => {
+            try {
+                const inviteesResponse = await fetch('http://localhost:5000/api/user/invitees', {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                });
+
+                if (!inviteesResponse.ok) throw new Error('Failed to fetch invitees');
+                const { inviteDetails } = await inviteesResponse.json();
+                setInvitees(inviteDetails);
+            } catch (err) {
+                setInviteError(err instanceof Error ? err.message : 'Failed to load data');
+            } finally {
+                setLoading({ link: false, invitees: false });
+            }
+        };
+
+        fetchInviteData();
+    }, [accessToken]);
+
+    const handleCopyLink = async () => {
+        if (!inviteLink) return;
+
+        try {
+            await navigator.clipboard.writeText(inviteLink);
+            setCopySuccess('Copied to clipboard!');
+            setTimeout(() => setCopySuccess(''), 2000);
+        } catch (err) {
+            setCopySuccess('Failed to copy!');
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center p-4">
-            <nav className="w-full bg-gray-800/50 backdrop-blur-sm border-b border-gray-700 fixed top-0">
-                <div className="max-w-7xl mx-auto px-4 py-3">
-                    <div className="flex justify-between items-center">
-                        <div className="flex space-x-6">
-                            <Link
-                                to="/invite"
-                                className="flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-white transition-colors duration-200"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                                </svg>
-                                Invite Friends
-                            </Link>
+        <div className="text-white min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col items-center p-4">
+            {inviteError && (
+                <div className="mb-6 p-3 bg-red-500/20 text-red-300 rounded-lg flex items-center gap-2">
+                    <FiAlertCircle className="flex-shrink-0" />
+                    {inviteError}
+                </div>
+            )}
+
+            <div className="space-y-8">
+                <div className="bg-gray-700/30 rounded-xl p-6 border border-gray-600">
+                    <div className="flex items-center gap-3 mb-4 justify-between">
+                        <div className='flex gap-3'>
+                            <FiLink className="text-2xl" />
+                            <h3 className="text-xl font-semibold">Your Invite Link</h3>
+
                         </div>
                         <button
-                            onClick={logout}
-                            className="bg-red-600/80 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 hover:scale-105 hover:shadow-red-500/20 hover:shadow-lg cursor-pointer"
+                            onClick={handleCopyLink}
+                            disabled={!inviteLink}
+                            className="bg-blue-500/20 hover:bg-blue-500/30 px-4 py-2 rounded-lg border border-blue-500/50 flex items-center gap-2 transition-colors cursor-pointer"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                            </svg>
-                            Logout
+                            <FiCopy className="text-blue-400" />
+                            <span>Copy</span>
                         </button>
                     </div>
+
+                    {loading.link ? (
+                        <div className="flex items-center justify-center gap-2 text-gray-400">
+                            <FiLoader className="animate-spin" />
+                            Generating invite link...
+                        </div>
+                    ) : (
+                        <div className="flex gap-4 items-center">
+                            <input
+                                type="text"
+                                value={inviteLink}
+                                readOnly
+                                className="w-full px-4 py-2 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 truncate"
+                            />
+
+                        </div>
+                    )}
+
+                    {copySuccess && (
+                        <div className="mt-3 flex items-center gap-2 text-sm text-green-400">
+                            <FiCheckCircle />
+                            {copySuccess}
+                        </div>
+                    )}
                 </div>
-            </nav>
+
+                <div className="bg-gray-700/30 rounded-xl p-6 border border-gray-600">
+                    <div className="flex items-center gap-3 mb-4">
+                        <FiUsers className="text-2xl text-blue-400" />
+                        <h3 className="text-xl font-semibold">Your Invitees</h3>
+                    </div>
+
+                    {loading.invitees ? (
+                        <div className="flex items-center justify-center gap-2 text-gray-400">
+                            <FiLoader className="animate-spin" />
+                            Loading invitees...
+                        </div>
+                    ) : invitees.length === 0 ? (
+                        <p className="text-gray-400 text-center py-4">No invitees yet</p>
+                    ) : (
+                        <div className="space-y-3">
+                            {invitees.map((invitee) => (
+                                <div
+                                    key={invitee.id}
+                                    className="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg border border-gray-700"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <FiUser className="text-gray-400" />
+                                        <span className="font-medium">{invitee.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-gray-400">High Score:</span>
+                                        <span className="font-mono text-purple-400">{invitee.highestScore}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
 
             <div className="text-center max-w-2xl w-full space-y-6 mt-24">
                 {userData && (
@@ -176,13 +277,12 @@ const Home: React.FC = () => {
 
                     </h1>
                 )}
-                {error && (
+                {profileError && (
                     <div className="bg-red-500/20 text-red-300 px-4 py-3 rounded-lg mb-4 border border-red-500/50">
-                        {error}
+                        {profileError}
                     </div>
                 )}
 
-                {/* Show start button if quiz is not active */}
                 {!quizData && !showResult && !quizEnded && (
                     <button
                         onClick={handleStartQuiz}
@@ -198,7 +298,6 @@ const Home: React.FC = () => {
 
                 {error && (
                     <div className="mb-4 animate-fade-in">
-                        {/* <p className="text-red-400 mb-2">{error}</p> */}
                         <button
                             onClick={handleEndQuiz}
                             className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
@@ -208,7 +307,6 @@ const Home: React.FC = () => {
                     </div>
                 )}
 
-                {/* Render the quiz question */}
                 {quizData && !showResult && (
                     <QuizQuestion
                         quizData={quizData}
@@ -219,7 +317,6 @@ const Home: React.FC = () => {
                     />
                 )}
 
-                {/* Render the submission result view */}
                 {showResult && submissionResult && (
                     quizEnded ? (
                         <QuizEnd
@@ -241,6 +338,20 @@ const Home: React.FC = () => {
                     )
                 )}
             </div>
+
+            <button
+                onDoubleClick={logout}
+                className="relative bg-red-600/80 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 hover:scale-105 hover:shadow-red-500/20 hover:shadow-lg cursor-pointer group"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+                </svg>
+                Logout
+                <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+                    Double-click to logout
+                </span>
+            </button>
+
         </div>
     )
 }
