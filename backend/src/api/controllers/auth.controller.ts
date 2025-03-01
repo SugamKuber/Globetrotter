@@ -3,7 +3,11 @@ import { User } from "../../models/User";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants/constants";
 import type { CustomJWTPayload } from "../../types/auth.types";
 
-export const signup = async ({ body, set, jwt }: any) => {
+export const signup = async ({ body, set, jwt }: {
+    body: { fullname: string; username: string; password: string };
+    set: { status: number };
+    jwt: any // TODO: Add type
+}) => {
     try {
         const { fullname, username, password } = body;
 
@@ -34,7 +38,7 @@ export const signup = async ({ body, set, jwt }: any) => {
 
 export const login = async ({ body, set, jwt }: {
     body: { username: string; password: string };
-    set: any;
+    set: { status: number };
     jwt: { sign: (payload: CustomJWTPayload) => Promise<string> };
 }) => {
     try {
@@ -75,7 +79,7 @@ export const login = async ({ body, set, jwt }: {
 
 export const refreshToken = async ({ body, set, jwt }: {
     body: { refreshToken: string };
-    set: any;
+    set: { status: number };
     jwt: {
         verify: (token: string) => Promise<CustomJWTPayload>
         sign: (payload: CustomJWTPayload) => Promise<string>;

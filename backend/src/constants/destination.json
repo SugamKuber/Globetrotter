@@ -1,0 +1,482 @@
+[
+    {
+        "city": "Paris",
+        "country": "France",
+        "clues": [
+            "This city is home to a famous tower that sparkles every night.",
+            "Known as the 'City of Love' and a hub for fashion and art."
+        ],
+        "funFact": [
+            "The Eiffel Tower was supposed to be dismantled after 20 years but was saved because it was useful for radio transmissions!",
+            "Paris has only one stop sign in the entire city—most intersections rely on priority-to-the-right rules."
+        ],
+        "trivia": [
+            "This city is famous for its croissants and macarons. Bon appétit!",
+            "Paris was originally a Roman city called Lutetia."
+        ]
+    },
+    {
+        "city": "Tokyo",
+        "country": "Japan",
+        "clues": [
+            "This city has the busiest pedestrian crossing in the world.",
+            "You can visit an entire district dedicated to anime, manga, and gaming."
+        ],
+        "funFact": [
+            "Tokyo was originally a small fishing village called Edo before becoming the bustling capital it is today!",
+            "More than 14 million people live in Tokyo, making it one of the most populous cities in the world."
+        ],
+        "trivia": [
+            "The city has over 160,000 restaurants, more than any other city in the world.",
+            "Tokyo’s subway system is so efficient that train delays of just a few minutes come with formal apologies."
+        ]
+    },
+    {
+        "city": "New York",
+        "country": "USA",
+        "clues": [
+            "Home to a green statue gifted by France in the 1800s.",
+            "Nicknamed 'The Big Apple' and known for its Broadway theaters."
+        ],
+        "funFact": [
+            "The Statue of Liberty was originally a copper color before oxidizing to its iconic green patina.",
+            "Times Square was once called Longacre Square before being renamed in 1904."
+        ],
+        "trivia": [
+            "New York City has 468 subway stations, making it one of the most complex transit systems in the world.",
+            "The Empire State Building has its own zip code: 10118."
+        ]
+    },
+    {
+        "city": "London",
+        "country": "United Kingdom",
+        "clues": [
+            "Home to a famous clock tower that isn’t actually called Big Ben.",
+            "You can take a ride on the iconic red double-decker buses."
+        ],
+        "funFact": [
+            "Big Ben actually refers to the bell inside the tower, not the tower itself!",
+            "London has over 170 museums, including the British Museum, which is free to visit."
+        ],
+        "trivia": [
+            "The London Underground is the oldest subway system in the world.",
+            "There are more than 8 million trees in London, making it one of the greenest cities in the world."
+        ]
+    },
+    {
+        "city": "Sydney",
+        "country": "Australia",
+        "clues": [
+            "This city is home to a famous opera house with a sail-like design.",
+            "You can climb one of the world's most famous bridges here."
+        ],
+        "funFact": [
+            "Sydney’s Harbour Bridge is the largest steel arch bridge in the world.",
+            "The Sydney Opera House took 14 years to complete and was originally estimated to cost $7 million but ended up costing $102 million!"
+        ],
+        "trivia": [
+            "Sydney has over 100 beaches, including the famous Bondi Beach.",
+            "Kangaroos outnumber humans in Australia by nearly 2:1!"
+        ]
+    },
+    {
+        "city": "Rome",
+        "country": "Italy",
+        "clues": [
+            "This city is home to the Colosseum, an ancient amphitheater.",
+            "Inside this city, there is an entirely different country!"
+        ],
+        "funFact": [
+            "Vatican City, the smallest country in the world, is located entirely within Rome.",
+            "Rome has more fountains than any other city in the world."
+        ],
+        "trivia": [
+            "Ancient Romans used to wash their clothes in urine because of its ammonia content.",
+            "The city’s nickname is 'The Eternal City' because of its long and continuous history."
+        ]
+    },
+    {
+        "city": "Dubai",
+        "country": "United Arab Emirates",
+        "clues": [
+            "This city is home to the tallest building in the world.",
+            "You can go skiing indoors even though it's in the desert!"
+        ],
+        "funFact": [
+            "The Burj Khalifa stands at a height of 828 meters, making it the tallest structure ever built.",
+            "Dubai has the world’s largest shopping mall, with over 1,200 stores."
+        ],
+        "trivia": [
+            "Gold vending machines exist in Dubai, where you can buy gold bars like snacks!",
+            "There are no personal income taxes in Dubai."
+        ]
+    },
+    {
+        "city": "Rio de Janeiro",
+        "country": "Brazil",
+        "clues": [
+            "Home to a giant statue of Christ overlooking the city.",
+            "Famous for its carnival, samba music, and stunning beaches."
+        ],
+        "funFact": [
+            "The iconic Christ the Redeemer statue was completed in 1931 and stands 30 meters tall.",
+            "Rio’s Copacabana Beach was named after a Bolivian town."
+        ],
+        "trivia": [
+            "Rio de Janeiro means ‘River of January’ in Portuguese.",
+            "The city was the capital of Portugal from 1808 to 1821, making it the only European capital outside of Europe."
+        ]
+    },
+    {
+        "city": "Berlin",
+        "country": "Germany",
+        "clues": [
+            "This city was once divided by a wall for nearly 30 years.",
+            "Home to the Brandenburg Gate, a symbol of European unity."
+        ],
+        "funFact": [
+            "Berlin has more bridges than Venice—around 1,700 in total!",
+            "The Berlin Wall fell in 1989, leading to German reunification."
+        ],
+        "trivia": [
+            "Berlin has the largest Turkish population outside of Turkey.",
+            "Berlin’s Museum Island has five world-famous museums."
+        ]
+    },
+    {
+        "city": "Istanbul",
+        "country": "Turkey",
+        "clues": [
+            "This city is the only one in the world that sits on two continents.",
+            "Famous for its massive covered marketplace with over 4,000 shops."
+        ],
+        "funFact": [
+            "The Grand Bazaar in Istanbul is one of the oldest and largest markets in the world.",
+            "Hagia Sophia has served as a church, mosque, and museum over the centuries."
+        ],
+        "trivia": [
+            "Istanbul was formerly known as Constantinople.",
+            "Tulips, often associated with the Netherlands, actually originated in Turkey."
+        ]
+    },
+    {
+        "city": "Moscow",
+        "country": "Russia",
+        "clues": [
+            "Home to the famous Red Square and colorful onion-domed cathedral.",
+            "Its subway system is known for its palatial stations."
+        ],
+        "funFact": [
+            "Moscow's metro stations are often called 'underground palaces' due to their grandeur.",
+            "The Kremlin has been the seat of Russian power for centuries."
+        ],
+        "trivia": [
+            "Moscow is the northernmost and coldest megacity in the world.",
+            "The city has more billionaires than any other city in Europe."
+        ]
+    },
+    {
+        "city": "Barcelona",
+        "country": "Spain",
+        "clues": [
+            "This city is famous for its unique architecture by Antoni Gaudí.",
+            "Home to one of the most successful football clubs in the world."
+        ],
+        "funFact": [
+            "La Sagrada Familia has been under construction since 1882 and is still not finished.",
+            "Barcelona has 9 UNESCO World Heritage Sites."
+        ],
+        "trivia": [
+            "The city has its own language, Catalan, in addition to Spanish.",
+            "Barcelona was the first city to win a RIBA Royal Gold Medal for its architecture."
+        ]
+    },
+    {
+        "city": "Cairo",
+        "country": "Egypt",
+        "clues": [
+            "Home to the only remaining wonder of the ancient world.",
+            "The Nile River runs through this city."
+        ],
+        "funFact": [
+            "The Great Pyramid of Giza was the tallest man-made structure in the world for over 3,800 years.",
+            "Cairo is known as 'The City of a Thousand Minarets' for its Islamic architecture."
+        ],
+        "trivia": [
+            "Cairo's metro is one of only two in Africa.",
+            "The city was founded in 969 AD by the Fatimid dynasty."
+        ]
+    },
+    {
+        "city": "Bangkok",
+        "country": "Thailand",
+        "clues": [
+            "This city is known for its vibrant street life and ornate temples.",
+            "Home to the Grand Palace and Wat Arun."
+        ],
+        "funFact": [
+            "Bangkok's full ceremonial name is the longest city name in the world.",
+            "The city has over 400 temples."
+        ],
+        "trivia": [
+            "Bangkok is known as 'Krung Thep' in Thai, which means 'City of Angels'.",
+            "The city is sinking at a rate of 2-3 cm per year."
+        ]
+    },
+    {
+        "city": "Athens",
+        "country": "Greece",
+        "clues": [
+            "This city is known as the cradle of Western civilization.",
+            "Home to the ancient Acropolis and Parthenon."
+        ],
+        "funFact": [
+            "Athens has been continuously inhabited for over 3,000 years.",
+            "The city is named after Athena, the Greek goddess of wisdom."
+        ],
+        "trivia": [
+            "The first modern Olympic Games were held in Athens in 1896.",
+            "Athens has more theatrical stages than any other city in the world."
+        ]
+    },
+    {
+        "city": "Beijing",
+        "country": "China",
+        "clues": [
+            "This city is home to the Forbidden City and the Great Wall.",
+            "Known for its Peking duck and ancient palaces."
+        ],
+        "funFact": [
+            "Beijing has seven UNESCO World Heritage Sites.",
+            "The city hosted the 2008 Summer Olympics."
+        ],
+        "trivia": [
+            "Beijing means 'Northern Capital' in Chinese.",
+            "The Forbidden City is the largest ancient palatial structure in the world."
+        ]
+    },
+    {
+        "city": "Cape Town",
+        "country": "South Africa",
+        "clues": [
+            "This city is known for its stunning Table Mountain.",
+            "You can visit Robben Island, where Nelson Mandela was imprisoned."
+        ],
+        "funFact": [
+            "Cape Town is one of the most multicultural cities in the world.",
+            "The city is home to the oldest working wine estate in South Africa."
+        ],
+        "trivia": [
+            "Cape Town was originally developed as a supply station for Dutch ships.",
+            "The city has a unique floral kingdom with over 9,000 plant species."
+        ]
+    },
+    {
+        "city": "Mexico City",
+        "country": "Mexico",
+        "clues": [
+            "This city is built on the ruins of the ancient Aztec capital, Tenochtitlán.",
+            "Known for its vibrant culture and historic Zócalo square."
+        ],
+        "funFact": [
+            "Mexico City sinks about 10 inches each year due to its foundation on a lakebed.",
+            "The city has the largest number of museums in the Americas."
+        ],
+        "trivia": [
+            "Mexico City is the oldest capital city in the Americas.",
+            "The city has a floating garden system called 'chinampas' used since Aztec times."
+        ]
+    },
+    {
+        "city": "Seoul",
+        "country": "South Korea",
+        "clues": [
+            "This city is known for its high-tech infrastructure and palaces.",
+            "Home to the bustling district of Gangnam."
+        ],
+        "funFact": [
+            "Seoul has the fastest internet speeds in the world.",
+            "The city is surrounded by mountains, with Namsan Tower offering panoramic views."
+        ],
+        "trivia": [
+            "Seoul means 'capital' in Korean.",
+            "The city has a population density twice that of New York City."
+        ]
+    },
+    {
+        "city": "Lisbon",
+        "country": "Portugal",
+        "clues": [
+            "This city is known for its historic trams and hilly landscape.",
+            "Home to the famous Belém Tower and pastel de nata."
+        ],
+        "funFact": [
+            "Lisbon is one of the oldest cities in Western Europe, predating Rome by centuries.",
+            "The city was almost completely destroyed by an earthquake in 1755."
+        ],
+        "trivia": [
+            "Lisbon has the longest bridge in Europe, the Vasco da Gama Bridge.",
+            "The city is built on seven hills, similar to Rome."
+        ]
+    },
+    {
+        "city": "Buenos Aires",
+        "country": "Argentina",
+        "clues": [
+            "This city is known as the 'Paris of South America'.",
+            "Famous for its tango music and dance."
+        ],
+        "funFact": [
+            "Buenos Aires has the widest avenue in the world, Avenida 9 de Julio.",
+            "The city is home to one of the world's most beautiful bookstores, El Ateneo Grand Splendid."
+        ],
+        "trivia": [
+            "Buenos Aires means 'Good Airs' in Spanish.",
+            "The city has more psychoanalysts per capita than any other city in the world."
+        ]
+    },
+    {
+        "city": "Toronto",
+        "country": "Canada",
+        "clues": [
+            "This city is home to the iconic CN Tower.",
+            "Known for its diverse population and vibrant arts scene."
+        ],
+        "funFact": [
+            "Toronto is the most multicultural city in the world, with over 140 languages spoken.",
+            "The PATH is the largest underground shopping complex in the world."
+        ],
+        "trivia": [
+            "Toronto means 'meeting place' in the Huron language.",
+            "The city hosts the Toronto International Film Festival (TIFF), one of the largest publicly attended film festivals in the world."
+        ]
+    },
+    {
+        "city": "Mumbai",
+        "country": "India",
+        "clues": [
+            "This city is the heart of the Bollywood film industry.",
+            "Home to the Gateway of India and Marine Drive."
+        ],
+        "funFact": [
+            "Mumbai was originally a group of seven islands.",
+            "The city is home to the world's most expensive private residence, Antilia."
+        ],
+        "trivia": [
+            "Mumbai was formerly known as Bombay.",
+            "The city has the largest number of millionaires and billionaires in India."
+        ]
+    },
+    {
+        "city": "Vienna",
+        "country": "Austria",
+        "clues": [
+            "This city is known for its classical music heritage and coffee houses.",
+            "Home to the Schönbrunn Palace and the Vienna State Opera."
+        ],
+        "funFact": [
+            "Vienna has been ranked as the world's most livable city multiple times.",
+            "The city is famous for its Sachertorte, a chocolate cake with apricot jam."
+        ],
+        "trivia": [
+            "Vienna was the home of famous composers like Mozart, Beethoven, and Strauss.",
+            "The city has over 100 museums."
+        ]
+    },
+    {
+        "city": "Amsterdam",
+        "country": "Netherlands",
+        "clues": [
+            "This city is known for its canals and cycling culture.",
+            "Home to the Anne Frank House and Van Gogh Museum."
+        ],
+        "funFact": [
+            "Amsterdam has more bicycles than residents.",
+            "The city is built on 11 million wooden poles to support its buildings."
+        ],
+        "trivia": [
+            "Amsterdam was originally a fishing village called Amstelredamme.",
+            "The city has over 1,500 bridges."
+        ]
+    },
+    {
+        "city": "Hong Kong",
+        "country": "China",
+        "clues": [
+            "This city is known for its skyline and bustling harbor.",
+            "Home to Victoria Peak and the Star Ferry."
+        ],
+        "funFact": [
+            "Hong Kong has the most skyscrapers in the world.",
+            "The city has one of the world's highest per capita incomes."
+        ],
+        "trivia": [
+            "Hong Kong means 'Fragrant Harbor' in Cantonese.",
+            "The city was a British colony until 1997."
+        ]
+    },
+    {
+        "city": "Singapore",
+        "country": "Singapore",
+        "clues": [
+            "This city-state is known for its cleanliness and strict laws.",
+            "Home to Marina Bay Sands and Gardens by the Bay."
+        ],
+        "funFact": [
+            "Singapore is one of the world's greenest cities, with over 50% green cover.",
+            "The city has a unique 'hawker' culture, with street food stalls offering a variety of cuisines."
+        ],
+        "trivia": [
+            "Singapore is one of only three city-states in the world.",
+            "The city has four official languages: English, Malay, Mandarin, and Tamil."
+        ]
+    },
+    {
+        "city": "Madrid",
+        "country": "Spain",
+        "clues": [
+            "This city is known for its royal palace and vibrant nightlife.",
+            "Home to the Prado Museum and Retiro Park."
+        ],
+        "funFact": [
+            "Madrid is the highest capital city in the European Union.",
+            "The city is famous for its tapas culture."
+        ],
+        "trivia": [
+            "Madrid's official symbol is a bear climbing a strawberry tree.",
+            "The city has more bars per capita than any other city in Europe."
+        ]
+    },
+    {
+        "city": "Kuala Lumpur",
+        "country": "Malaysia",
+        "clues": [
+            "This city is known for its iconic Petronas Twin Towers.",
+            "Home to Batu Caves and a vibrant street food scene."
+        ],
+        "funFact": [
+            "Kuala Lumpur means 'muddy confluence' in Malay.",
+            "The city has a tropical rainforest within its boundaries, the Bukit Nanas Forest Reserve."
+        ],
+        "trivia": [
+            "Kuala Lumpur is one of the fastest-growing metropolitan regions in Southeast Asia.",
+            "The city hosts the Formula One Malaysian Grand Prix."
+        ]
+    },
+    {
+        "city": "San Francisco",
+        "country": "USA",
+        "clues": [
+            "This city is famous for its Golden Gate Bridge.",
+            "Known for its steep hills and historic cable cars."
+        ],
+        "funFact": [
+            "San Francisco was built on more than 50 hills.",
+            "The city is home to the largest and oldest Chinatown in North America."
+        ],
+        "trivia": [
+            "San Francisco was originally called Yerba Buena.",
+            "The city experiences frequent fog, which locals call 'Karl the Fog'."
+        ]
+    }
+]

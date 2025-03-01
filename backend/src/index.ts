@@ -5,6 +5,7 @@ import { config } from "./config/config";
 import { connectToDB } from "./db/connection";
 import { authRouter } from "./api/routers/auth.router";
 import { userRouter } from "./api/routers/user.router";
+import { quizRouter } from "./api/routers/quiz.router";
 
 const app = new Elysia()
   .use(swagger())
@@ -13,6 +14,7 @@ const app = new Elysia()
     app
       .use(authRouter)
       .use(userRouter)
+      .use(quizRouter)
   )
   .listen(config.PORT);
 

@@ -5,6 +5,7 @@ export interface IUser extends Document {
   fullname: string;
   username: string;
   password: string;
+  highestScore: number;
   refreshToken?: string;
 }
 
@@ -12,6 +13,7 @@ const UserSchema = new Schema<IUser>({
   fullname: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true, select: true },
+  highestScore: { type: Number, default: 0, required: true },
   refreshToken: { type: String, select: true },
 });
 
