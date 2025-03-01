@@ -2,21 +2,27 @@ import { Elysia } from "elysia";
 import { User } from "../../models/User";
 import { Destination } from "../../models/Destination";
 import { IQuestion, Quiz } from "../../models/Quiz";
-import { Types } from "mongoose";
+import { Types, startSession } from "mongoose";
 
 export const start = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const existingQuiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const existingQuiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (existingQuiz) {
             set.status = 400;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "You cannot start a new quiz until the current quiz has ended" };
         }
 
-        const destinations = await Destination.aggregate([{ $sample: { size: 4 } }]);
+        const destinations = await Destination.aggregate([{ $sample: { size: 4 } }]).session(session);
 
         if (destinations.length < 4) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Not enough destinations" };
         }
 
@@ -37,7 +43,7 @@ export const start = async ({ user, set }: { user: any, set: any }) => {
             isEnded: false,
         });
 
-        await quiz.save();
+        await quiz.save({ session });
 
         const options = destinations.map((dest) => ({
             city: dest.city,
@@ -50,6 +56,9 @@ export const start = async ({ user, set }: { user: any, set: any }) => {
             [options[i], options[j]] = [options[j], options[i]];
         }
 
+        await session.commitTransaction();
+        session.endSession();
+
         return {
             clues,
             options,
@@ -58,23 +67,32 @@ export const start = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to start quiz", error: (error as Error).message };
     }
 };
 
 export const end = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (!quiz) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "No active quiz found" };
         }
 
         quiz.isEnded = true;
         quiz.endTime = new Date();
-        await quiz.save();
+        await quiz.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
 
         return {
             message: "Quiz ended successfully",
@@ -84,24 +102,31 @@ export const end = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to end quiz", error: (error as Error).message };
     }
 };
+
 export const restart = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (quiz) {
             quiz.isEnded = true;
             quiz.endTime = new Date();
-            await quiz.save();
+            await quiz.save({ session });
         }
 
-        const destinations = await Destination.aggregate([{ $sample: { size: 4 } }]);
+        const destinations = await Destination.aggregate([{ $sample: { size: 4 } }]).session(session);
 
         if (destinations.length === 0) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "No destinations found" };
         }
 
@@ -122,7 +147,7 @@ export const restart = async ({ user, set }: { user: any, set: any }) => {
             isEnded: false,
         });
 
-        await newQuiz.save();
+        await newQuiz.save({ session });
 
         const options = destinations.map((dest) => ({
             city: dest.city,
@@ -135,6 +160,9 @@ export const restart = async ({ user, set }: { user: any, set: any }) => {
             [options[i], options[j]] = [options[j], options[i]];
         }
 
+        await session.commitTransaction();
+        session.endSession();
+
         return {
             message: "Quiz restarted successfully",
             clues,
@@ -144,6 +172,8 @@ export const restart = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to restart quiz", error: (error as Error).message };
     }
@@ -151,12 +181,15 @@ export const restart = async ({ user, set }: { user: any, set: any }) => {
 
 export const submit = async ({ user, set, body }: { user: any, set: any, body: any }) => {
     const { questionId, answerId } = body;
-
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (!quiz) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Quiz not found" };
         }
 
@@ -164,16 +197,22 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
 
         if (!question) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Question not found" };
         }
 
         if (question.status !== "unanswered") {
             set.status = 400;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Question already answered" };
         }
 
         if (!question.optionsId.includes(answerId)) {
             set.status = 400;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Invalid answer ID" };
         }
 
@@ -185,28 +224,35 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
             quiz.score -= 20;
         }
 
-        await quiz.save();
+        await quiz.save({ session });
 
-        const destination = await Destination.findById(question.correctOptionId);
+        const destination = await Destination.findById(question.correctOptionId).session(session);
 
         if (!destination) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Destination not found" };
         }
 
         const funFact = destination.funFact[Math.floor(Math.random() * destination.funFact.length)];
         const trivia = destination.trivia[Math.floor(Math.random() * destination.trivia.length)];
 
-        const userRecord = await User.findById(user._id);
+        const userRecord = await User.findById(user._id).session(session);
         if (!userRecord) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "User not found" };
         }
 
         if (quiz.score > userRecord.highestScore) {
             userRecord.highestScore = quiz.score;
-            await userRecord.save();
+            await userRecord.save({ session });
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         return {
             message: "Answer submitted",
@@ -217,17 +263,23 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to submit quiz", error: (error as Error).message };
     }
 };
 
 export const next = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (!quiz) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "Quiz not found" };
         }
 
@@ -237,12 +289,14 @@ export const next = async ({ user, set }: { user: any, set: any }) => {
         const correctDestinations = await Destination.aggregate([
             { $match: { _id: { $nin: usedCorrectObjectIds } } },
             { $sample: { size: 1 } }
-        ]);
+        ]).session(session);
 
         if (correctDestinations.length === 0) {
             quiz.isEnded = true;
             quiz.endTime = new Date();
-            await quiz.save();
+            await quiz.save({ session });
+            await session.commitTransaction();
+            session.endSession();
             const timeTaken = (quiz.endTime.getTime() - quiz.startTime.getTime()) / 1000; // time in seconds
             return {
                 message: "Quiz has ended",
@@ -258,12 +312,14 @@ export const next = async ({ user, set }: { user: any, set: any }) => {
         const otherDestinations = await Destination.aggregate([
             { $match: { _id: { $ne: correct._id } } },
             { $sample: { size: 3 } }
-        ]);
+        ]).session(session);
 
         if (otherDestinations.length < 3) {
             quiz.isEnded = true;
             quiz.endTime = new Date();
-            await quiz.save();
+            await quiz.save({ session });
+            await session.commitTransaction();
+            session.endSession();
             return {
                 message: "Quiz has ended",
                 score: quiz.score,
@@ -287,13 +343,16 @@ export const next = async ({ user, set }: { user: any, set: any }) => {
 
         quiz.questions.push(newQuestion);
         quiz.currentQuestion += 1;
-        await quiz.save();
+        await quiz.save({ session });
 
         const options = optionsDestinations.map((dest) => ({
             city: dest.city,
             country: dest.country,
             id: dest._id.toString(),
         }));
+
+        await session.commitTransaction();
+        session.endSession();
 
         return {
             clues: correct.clues.slice(0, 2),
@@ -303,19 +362,28 @@ export const next = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to get next question", error: (error as Error).message };
     }
 };
 
 export const status = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false });
+        const quiz = await Quiz.findOne({ userId: user._id, isEnded: false }).session(session);
 
         if (!quiz) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "No active quiz found" };
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         return {
             message: "Current quiz status",
@@ -331,19 +399,28 @@ export const status = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to get quiz status", error: (error as Error).message };
     }
 };
 
 export const history = async ({ user, set }: { user: any, set: any }) => {
+    const session = await startSession();
+    session.startTransaction();
     try {
-        const quizzes = await Quiz.find({ userId: user._id, isEnded: true });
+        const quizzes = await Quiz.find({ userId: user._id, isEnded: true }).session(session);
 
         if (quizzes.length === 0) {
             set.status = 404;
+            await session.abortTransaction();
+            session.endSession();
             return { message: "No quiz history found" };
         }
+
+        await session.commitTransaction();
+        session.endSession();
 
         return {
             message: "Quiz history",
@@ -365,29 +442,9 @@ export const history = async ({ user, set }: { user: any, set: any }) => {
         };
 
     } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
         set.status = 500;
         return { message: "Failed to get quiz history", error: (error as Error).message };
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
