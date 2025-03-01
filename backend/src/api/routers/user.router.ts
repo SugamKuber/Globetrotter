@@ -6,6 +6,24 @@ export const userRouter = (app: Elysia) =>
     app.group("/user", (app) =>
         app
             .use(authMiddleware)
-            .get("/me", getMe)
-            .get("/invitees", getInviteDetails)
+            .get("/me", getMe, {
+                detail: {
+                    tags: ['User'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
+            .get("/invitees", getInviteDetails, {
+                detail: {
+                    tags: ['User'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
     );

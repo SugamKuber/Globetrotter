@@ -59,7 +59,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             <div className="mb-6">
                 <h2 className="text-2xl font-bold text-white mb-4">Options</h2>
                 <div className="space-y-3">
-                    {quizData.options.map((option, index) => (
+                    {quizData.options.map((option) => (
                         <label
                             key={option.id}
                             className={`block p-4 rounded-lg cursor-pointer transition-all duration-200 ${selectedAnswer === option.id

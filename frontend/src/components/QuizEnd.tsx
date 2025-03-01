@@ -1,5 +1,6 @@
 import React from 'react'
 import { SubmissionResult } from '../types/quiz'
+import { FiLoader } from 'react-icons/fi'
 
 interface QuizEndProps {
     submissionResult: SubmissionResult
@@ -53,6 +54,14 @@ const QuizEnd: React.FC<QuizEndProps> = ({ submissionResult, score, timeTaken, w
 
                 </div>
             </div>
+
+            {!submissionResult && (
+                <div className="flex items-center justify-center gap-2 text-gray-400">
+                    <FiLoader className="animate-spin" />
+                    Loading final results...
+                </div>
+            )}
+
 
             {submissionResult.message && (
                 <div className="bg-purple-500/10 p-4 rounded-xl border border-purple-500/20 mb-6">

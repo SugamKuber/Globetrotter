@@ -11,16 +11,25 @@ export const authRouter = (app: Elysia) =>
                     password: t.String(),
                     ref: t.Optional(t.String()),
                 }),
+                detail: {
+                    tags: ['App']
+                }
             })
             .post("/login", login, {
                 body: t.Object({
                     username: t.String(),
                     password: t.String(),
                 }),
+                detail: {
+                    tags: ['App']
+                }
             })
             .post("/refresh", refreshToken, {
                 body: t.Object({
                     refreshToken: t.String(),
                 }),
+                detail: {
+                    tags: ['App']
+                }
             })
     );

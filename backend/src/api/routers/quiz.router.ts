@@ -5,7 +5,16 @@ import { start, submit, next, status, restart, end, history } from "../controlle
 export const quizRouter = (app: Elysia) =>
     app.group("/quiz", (app) =>
         app.use(authMiddleware)
-            .get("/start", start)
+            .get("/start", start, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
             .post(
                 "/submit",
                 submit,
@@ -14,11 +23,64 @@ export const quizRouter = (app: Elysia) =>
                         questionId: t.String(),
                         answerId: t.String(),
                     }),
+                    detail: {
+                        tags: ['Quiz'],
+                        security: [
+                            {
+                                bearerAuth: []
+                            }
+                        ]
+                    }
                 }
             )
-            .get("/next", next)
-            .get("restart", restart)
-            .get("/end", end)
-            .get("/status", status)
-            .get("/history", history)
+            .get("/next", next, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
+            .get("/restart", restart, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
+            .get("/end", end, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
+            .get("/status", status, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
+            .get("/history", history, {
+                detail: {
+                    tags: ['Quiz'],
+                    security: [
+                        {
+                            bearerAuth: []
+                        }
+                    ]
+                }
+            })
     );

@@ -221,7 +221,8 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
             quiz.score += 10;
         } else {
             question.status = "wrong";
-            quiz.score -= 20;
+            quiz.score -= 0;
+            // change the score number
         }
 
         await quiz.save({ session });
@@ -246,9 +247,18 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
             return { message: "User not found" };
         }
 
-        if (quiz.score > userRecord.highestScore) {
-            userRecord.highestScore = quiz.score;
-            await userRecord.save({ session });
+        console.log("c", quiz.score)
+        console.log(user._id)
+        console.log(user)
+        console.log("hi", userRecord.highestScore)
+        if (typeof userRecord.highestScore === 'undefined' || quiz.score > userRecord.highestScore) {
+            // userRecord.highestScore = quiz.score;
+            // await userRecord.save({ session });
+            await User.findOneAndUpdate(
+                { _id: user._id },
+                { $set: { highestScore: quiz.score } },
+                { upsert: true, session }
+            );
         }
 
         await session.commitTransaction();

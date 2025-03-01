@@ -3,16 +3,12 @@ import { SubmissionResult } from '../types/quiz'
 
 interface QuizResultProps {
     submissionResult: SubmissionResult
-    score: number
-    onEndQuiz: () => void
     onNextQuestion: () => void
     isNextLoading: boolean
 }
 
 const QuizResult: React.FC<QuizResultProps> = ({
     submissionResult,
-    score,
-    onEndQuiz,
     onNextQuestion,
     isNextLoading
 }) => {
@@ -57,13 +53,6 @@ const QuizResult: React.FC<QuizResultProps> = ({
             </div>
 
             <div className="flex justify-center gap-4">
-                <button
-                    onClick={onEndQuiz}
-                    className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
-                >
-                    End Quiz
-                </button>
-
                 <button
                     onClick={onNextQuestion}
                     disabled={isNextLoading}
