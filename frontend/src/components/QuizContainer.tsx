@@ -91,7 +91,7 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
                     {isLoading ? 'Starting...' : 'Start Quiz'}
                 </button>
             )}
-            {error && (
+            {error && !isQuizActive && (
                 <div className="mb-4 animate-fade-in">
                     <button
                         onClick={handleEndQuiz}
