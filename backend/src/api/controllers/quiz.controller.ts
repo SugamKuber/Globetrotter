@@ -1,10 +1,11 @@
-import { Elysia } from "elysia";
 import { User } from "../../models/User";
 import { Destination } from "../../models/Destination";
 import { IQuestion, Quiz } from "../../models/Quiz";
 import { Types, startSession } from "mongoose";
+import { AuthUser } from "../../types/auth.types";
 
-export const start = async ({ user, set }: { user: any, set: any }) => {
+
+export const start = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {
@@ -74,7 +75,7 @@ export const start = async ({ user, set }: { user: any, set: any }) => {
     }
 };
 
-export const end = async ({ user, set }: { user: any, set: any }) => {
+export const end = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {
@@ -109,7 +110,7 @@ export const end = async ({ user, set }: { user: any, set: any }) => {
     }
 };
 
-export const restart = async ({ user, set }: { user: any, set: any }) => {
+export const restart = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {
@@ -179,7 +180,7 @@ export const restart = async ({ user, set }: { user: any, set: any }) => {
     }
 };
 
-export const submit = async ({ user, set, body }: { user: any, set: any, body: any }) => {
+export const submit = async ({ user, set, body }: { user: AuthUser, set: { status: number }, body: { questionId: string; answerId: string } }) => {
     const { questionId, answerId } = body;
     const session = await startSession();
     session.startTransaction();
@@ -280,7 +281,7 @@ export const submit = async ({ user, set, body }: { user: any, set: any, body: a
     }
 };
 
-export const next = async ({ user, set }: { user: any, set: any }) => {
+export const next = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {
@@ -379,7 +380,7 @@ export const next = async ({ user, set }: { user: any, set: any }) => {
     }
 };
 
-export const status = async ({ user, set }: { user: any, set: any }) => {
+export const status = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {
@@ -416,7 +417,7 @@ export const status = async ({ user, set }: { user: any, set: any }) => {
     }
 };
 
-export const history = async ({ user, set }: { user: any, set: any }) => {
+export const history = async ({ user, set }: { user: AuthUser, set: { status: number } }) => {
     const session = await startSession();
     session.startTransaction();
     try {

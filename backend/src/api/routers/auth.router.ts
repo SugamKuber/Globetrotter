@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { signup, login, refreshToken } from "../controllers/auth.controller";
 
-export const authRouter = (app: Elysia) =>
+export const authRouter = (app: Elysia) => {
     app.group("/auth", (app) =>
         app
             .post("/signup", signup, {
@@ -10,26 +10,17 @@ export const authRouter = (app: Elysia) =>
                     username: t.String(),
                     password: t.String(),
                     ref: t.Optional(t.String()),
-                }),
-                detail: {
-                    tags: ['App']
-                }
+                }), detail: { tags: ['App'] }
             })
             .post("/login", login, {
                 body: t.Object({
                     username: t.String(),
                     password: t.String(),
-                }),
-                detail: {
-                    tags: ['App']
-                }
+                }), detail: { tags: ['App'] }
             })
             .post("/refresh", refreshToken, {
-                body: t.Object({
-                    refreshToken: t.String(),
-                }),
-                detail: {
-                    tags: ['App']
-                }
+                body: t.Object({ refreshToken: t.String() }),
+                detail: { tags: ['App'] }
             })
     );
+}

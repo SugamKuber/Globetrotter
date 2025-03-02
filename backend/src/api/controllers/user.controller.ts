@@ -1,7 +1,8 @@
 import { User } from "../../models/User";
 import { Invite } from "../../models/Invite";
+import { AuthUser } from "../../types/auth.types";
 
-export const getMe = async ({ user }: any) => {
+export const getMe = async ({ user }: { user: AuthUser }) => {
     const [invite, userData] = await Promise.all([
         Invite.findOne({ inviterId: user._id.toString() }, 'inviteLink'),
         User.findById(user._id)
@@ -20,7 +21,7 @@ export const getMe = async ({ user }: any) => {
 };
 
 
-export const getInviteDetails = async ({ user }: any) => {
+export const getInviteDetails = async ({ user }: { user: AuthUser }) => {
     const invite = await Invite.findOne({ inviterId: user._id.toString() });
     if (!invite) throw new Error("Invite not found");
 

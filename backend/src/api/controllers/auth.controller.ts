@@ -1,4 +1,3 @@
-import { Elysia } from "elysia";
 import { User } from "../../models/User";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants/constants";
 import type { CustomJWTPayload } from "../../types/auth.types";
@@ -9,8 +8,10 @@ import { config } from "../../config/config";
 export const signup = async ({ body, set, jwt }: {
     body: { fullname: string; username: string; password: string, ref?: string };
     set: { status: number };
-    jwt: any // TODO: Add type
-}) => {
+    jwt: {
+        sign: (payload: CustomJWTPayload) => Promise<string>;
+    };
+}): Promise<{ success: boolean; message: string }> => {
     try {
         const { fullname, username, password, ref } = body;
 
@@ -24,8 +25,7 @@ export const signup = async ({ body, set, jwt }: {
 
         const refreshToken = await jwt.sign({
             userId: username,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7)
-            // 7 days expiry
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7) // 7 days expiry
         });
 
         const user = await User.create({ fullname, username, password: hashedPassword, refreshToken });
@@ -38,11 +38,8 @@ export const signup = async ({ body, set, jwt }: {
         await invite.save();
 
         if (ref) {
-            console.log("heheheh")
             const referrer = await Invite.findOne({ inviterId: new Types.ObjectId(ref) });
             if (referrer) {
-                console.log(referrer)
-                console.log(user._id)
                 referrer.inviteesId.push(user._id);
                 await referrer.save();
             }
@@ -61,7 +58,7 @@ export const login = async ({ body, set, jwt }: {
     body: { username: string; password: string };
     set: { status: number };
     jwt: { sign: (payload: CustomJWTPayload) => Promise<string> };
-}) => {
+}): Promise<{ success: boolean; accessToken?: string; refreshToken?: string; message: string }> => {
     try {
         const { username, password } = body;
 
@@ -105,7 +102,7 @@ export const refreshToken = async ({ body, set, jwt }: {
         verify: (token: string) => Promise<CustomJWTPayload>
         sign: (payload: CustomJWTPayload) => Promise<string>;
     };
-}) => {
+}): Promise<{ success: boolean; accessToken?: string; message: string }> => {
     try {
         const { refreshToken } = body;
 
@@ -126,7 +123,7 @@ export const refreshToken = async ({ body, set, jwt }: {
             exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hour expiry
         });
 
-        return { success: true, accessToken: newAccessToken };
+        return { success: true, accessToken: newAccessToken, message: "refresh successfully" };
     } catch (error) {
         console.error(error);
         set.status = 500;
