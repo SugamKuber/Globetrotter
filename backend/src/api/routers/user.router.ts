@@ -10,7 +10,7 @@ const userRouteDetails = {
 };
 
 export const userRouter = (app: Elysia) => {
-    app.group("/user", (app) =>
+    return app.group("/user", (app) =>
         app.use(authMiddleware)
             .get("/me", getMe, userRouteDetails)
             .get("/invitees", getInviteDetails, userRouteDetails)

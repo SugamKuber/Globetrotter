@@ -4,9 +4,14 @@ const destinationData = process.env.NODE_ENV === 'production'
     ? require('../constants/destination.json')
     : require('../constants/test.json');
 
+const citySize = process.env.NODE_ENV === 'production' && process.env.QUIZ_SIZE
+    ? parseInt(process.env.QUIZ_SIZE, 10)
+    : destinationData.length;
+
 export const seedDatabase = async () => {
     try {
-        for (const data of destinationData) {
+        const limitedData = destinationData.slice(0, citySize);
+        for (const data of limitedData) {
             const exists = await Destination.findOne({ city: data.city });
             if (!exists) {
                 await new Destination(data).save();

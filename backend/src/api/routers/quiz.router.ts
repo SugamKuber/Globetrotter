@@ -10,7 +10,7 @@ const routeDetail = {
 };
 
 export const quizRouter = (app: Elysia) => {
-    app.group("/quiz", (app) =>
+    return app.group("/quiz", (app) =>
         app.use(authMiddleware)
             .get("/start", start, routeDetail)
             .post("/submit", submit, {
@@ -25,4 +25,4 @@ export const quizRouter = (app: Elysia) => {
             .get("/status", status, routeDetail)
             .get("/history", history, routeDetail)
     );
-}
+};

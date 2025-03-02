@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia";
 import { signup, login, refreshToken } from "../controllers/auth.controller";
 
 export const authRouter = (app: Elysia) => {
-    app.group("/auth", (app) =>
+    return app.group("/auth", (app) =>
         app
             .post("/signup", signup, {
                 body: t.Object({

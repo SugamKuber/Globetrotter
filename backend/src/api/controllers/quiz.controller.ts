@@ -248,10 +248,6 @@ export const submit = async ({ user, set, body }: { user: AuthUser, set: { statu
             return { message: "User not found" };
         }
 
-        console.log("c", quiz.score)
-        console.log(user._id)
-        console.log(user)
-        console.log("hi", userRecord.highestScore)
         if (typeof userRecord.highestScore === 'undefined' || quiz.score > userRecord.highestScore) {
             // userRecord.highestScore = quiz.score;
             // await userRecord.save({ session });
