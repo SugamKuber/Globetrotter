@@ -28,6 +28,7 @@ interface QuizContainerProps {
     handleSubmitAnswer: () => Promise<void>;
     handleFetchNextQuestion: () => void;
     setSelectedAnswer: (answer: string | null) => void;
+    fetchProfile: () => Promise<void>;
 }
 
 const QuizContainer: React.FC<QuizContainerProps> = ({
@@ -53,7 +54,15 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
     handleSubmitAnswer,
     handleFetchNextQuestion,
     setSelectedAnswer,
+    fetchProfile,
 }) => {
+
+    React.useEffect(() => {
+        if (quizEnded || showResult) {
+            fetchProfile();
+        }
+    }, [quizEnded, showResult, fetchProfile]);
+
     return (
         <div className="text-center  w-full  max-w-2xl space-y-8 p-6 mt-8">
             {!isQuizActive && !quizEnded && userData && (
@@ -91,7 +100,7 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
                     {isLoading ? 'Starting...' : 'Start Quiz'}
                 </button>
             )}
-            {error && !isQuizActive && (
+            {error && !showResult && !isQuizActive && (
                 <div className="mb-4 animate-fade-in">
                     <button
                         onClick={handleEndQuiz}

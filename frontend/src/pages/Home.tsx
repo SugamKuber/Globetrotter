@@ -46,24 +46,24 @@ const Home: React.FC = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
 
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await fetch(`${API_URL}/user/me`, {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setUserData(data);
-                    setInviteLink(data.inviteLink);
-                } else {
-                    setProfileError('Failed to fetch profile');
-                }
-            } catch (err) {
-                setProfileError('Error fetching profile');
+    const fetchProfile = async () => {
+        try {
+            const response = await fetch(`${API_URL}/user/me`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUserData(data);
+                setInviteLink(data.inviteLink);
+            } else {
+                setProfileError('Failed to fetch profile');
             }
-        };
+        } catch (err) {
+            setProfileError('Error fetching profile');
+        }
+    };
 
+    useEffect(() => {
         fetchProfile();
     }, [accessToken]);
 
@@ -233,6 +233,7 @@ const Home: React.FC = () => {
                 handleSubmitAnswer={handleSubmitAnswer}
                 handleFetchNextQuestion={handleFetchNextQuestion}
                 setSelectedAnswer={setSelectedAnswer}
+                fetchProfile={fetchProfile}
             />
             {!isQuizActive && (
                 <div className="space-y-8 w-full max-w-2xl">

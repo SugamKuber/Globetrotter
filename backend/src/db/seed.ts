@@ -5,7 +5,7 @@ const destinationData = process.env.NODE_ENV === 'production'
     : require('../constants/test.json');
 
 const citySize = process.env.NODE_ENV === 'production' && process.env.QUIZ_SIZE
-    ? parseInt(process.env.QUIZ_SIZE, 10)
+    ? parseInt(process.env.QUIZ_SIZE, 4)
     : destinationData.length;
 
 export const seedDatabase = async () => {
