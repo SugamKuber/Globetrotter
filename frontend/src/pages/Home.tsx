@@ -12,6 +12,7 @@ import QuizContainer from '../components/QuizContainer';
 import LogoutButton from '../components/Logout';
 import { useAuth } from '../contexts/AuthContext';
 import { FiAlertCircle } from 'react-icons/fi';
+import { API_URL } from '../config/config'
 
 interface Invitee {
     id: string;
@@ -48,7 +49,7 @@ const Home: React.FC = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/user/me', {
+                const response = await fetch(`${API_URL}/user/me`, {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
                 if (response.ok) {
@@ -179,7 +180,7 @@ const Home: React.FC = () => {
     useEffect(() => {
         const fetchInviteData = async () => {
             try {
-                const inviteesResponse = await fetch('http://localhost:5000/api/user/invitees', {
+                const inviteesResponse = await fetch(`${API_URL}/user/invitees`, {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
                 if (!inviteesResponse.ok) throw new Error('Failed to fetch invitees');

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FiUser, FiLock, FiAlertCircle, FiMail } from 'react-icons/fi';
+import { API_URL } from '../config/config';
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -56,7 +57,7 @@ const Signup: React.FC = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
+      const response = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)

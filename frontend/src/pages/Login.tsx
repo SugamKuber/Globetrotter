@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { API_URL } from '../config/config';
 
 const Login: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ const Login: React.FC = () => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
+            const response = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials),
