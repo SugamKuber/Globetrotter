@@ -25,7 +25,7 @@ interface QuizContainerProps {
     correctQuestions: number;
     handleStartQuiz: () => void;
     handleEndQuiz: () => void;
-    handleSubmitAnswer: () => void;
+    handleSubmitAnswer: () => Promise<void>;
     handleFetchNextQuestion: () => void;
     setSelectedAnswer: (answer: string | null) => void;
 }
@@ -111,17 +111,6 @@ const QuizContainer: React.FC<QuizContainerProps> = ({
                 </div>
             )}
 
-
-
-            {/* {quizData && !showResult && (
-                <QuizQuestion
-                    quizData={quizData}
-                    selectedAnswer={selectedAnswer}
-                    setSelectedAnswer={setSelectedAnswer}
-                    score={score}
-                    onSubmitAnswer={handleSubmitAnswer}
-                />
-            )} */}
             {quizEnded ? (
                 <QuizEnd
                     submissionResult={submissionResult!}

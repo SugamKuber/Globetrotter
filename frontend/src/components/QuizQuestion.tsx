@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { QuizData } from '../types/quiz'
 
 interface QuizQuestionProps {
@@ -16,6 +16,14 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
     score,
     onSubmitAnswer
 }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        await onSubmitAnswer();
+        setIsSubmitting(false);
+    };
+
     {
         useEffect(() => {
             const handleKeyDown = (event: KeyboardEvent) => {
@@ -86,12 +94,12 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             <div className="flex justify-between items-center">
                 <span className="text-xl font-bold text-white">Score: {score}</span>
                 <button
-                    onClick={onSubmitAnswer}
-                    disabled={!selectedAnswer}
-                    className={`px-6 py-3 rounded-lg font-semibold ${selectedAnswer ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 cursor-not-allowed'
+                    onClick={handleSubmit}
+                    disabled={!selectedAnswer || isSubmitting}
+                    className={`px-6 py-3 rounded-lg font-semibold ${selectedAnswer && !isSubmitting ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-600 cursor-not-allowed'
                         } text-white transition-colors`}
                 >
-                    Submit Answer
+                    {isSubmitting ? 'Submitting...' : 'Submit Answer'}
                 </button>
             </div>
         </div>
